@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFGames Web</title>
+<meta name="description" content="RFGames Web 独立游戏作品站">
+<link rel="icon" href="assets/img/rf.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">RF</div>
+      <div class="brand-name"><span data-site-name>RFGames</span> Web</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html" data-page="index.html">首页</a>
+      <a href="works.html" data-page="works.html">作品</a>
+      <a href="team.html" data-page="team.html">团队</a>
+      <a href="about.html" data-page="about.html">关于</a>
+      <a class="nav-cta" href="works.html">浏览作品</a>
+    </nav>
+    <button class="burger" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1><span data-hero-title>RFGames</span> Web</h1>
+    <p data-hero-sub>用游戏记录想象</p>
+    <div class="hero-act">
+      <a class="btn btn-primary" href="works.html">浏览全部作品</a>
+      <a class="btn" href="team.html">团队成员</a>
+    </div>
+    <div class="hero-stats">
+      <div><b data-stat="works">0</b><span>个作品</span></div>
+      <div><b data-stat="team">0</b><span>位成员</span></div>
+    </div>
+  </section>
+
+  <section id="works">
+    <div class="sec-head">
+      <h2>作品</h2>
+      <p>点击卡片跳转至对应作品</p>
+    </div>
+    <div class="work-grid" id="home-works"></div>
+    <div class="more">
+      <a class="btn" href="works.html">查看全部作品</a>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="sec-head">
+      <h2>团队成员</h2>
+      <p>点击成员卡片会掉落一颗爱心</p>
+    </div>
+    <div class="team-grid" id="home-team"></div>
+  </section>
+
+  <section class="cta">
+    <a class="btn btn-primary" href="about.html">了解我们</a>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span data-footer>© 2026 RFGames Web</span>
+    <div class="foot-links" data-icp></div>
+  </div>
+</footer>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const works = Store.works();
+  const team = Store.team();
+
+  const setStat = (key, val) => {
+    const n = document.querySelector('[data-stat="' + key + '"]');
+    if (n) n.textContent = val;
+  };
+  setStat('works', works.length);
+  setStat('team', team.length);
+
+  RF.renderWorks('home-works', works, 6);
+  RF.renderTeam('home-team');
+  RF.countUp();
+});
+</script>
+</body>
+</html>
