@@ -1,95 +1,1070 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RFGames Web</title>
-<meta name="description" content="RFGames Web 独立游戏作品站">
-<link rel="icon" href="assets/img/rf.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/style.css">
+<meta name="description" content="RFGames Web — an indie game studio showcase.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' rx='26' fill='%231E5BCC'/%3E%3Ctext x='64' y='66' fill='%23fff' font-family='Segoe UI,Arial,sans-serif' font-size='50' font-weight='700' text-anchor='middle' dominant-baseline='central'%3ERF%3C/text%3E%3C/svg%3E">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-2: #f6f8fb;
+  --surface: #ffffff;
+  --line: #e3e8f0;
+  --line-2: #d3dbe6;
+  --ink: #0d1726;
+  --ink-2: #33415c;
+  --muted: #6b7a91;
+  --blue: #1e5bcc;
+  --blue-2: #1750b5;
+  --blue-soft: #eef4ff;
+  --blue-line: #c9dcff;
+  --radius: 12px;
+  --maxw: 1080px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow 0.4s var(--ease), background 0.4s var(--ease);
+}
+
+.nav.stuck {
+  box-shadow: 0 6px 24px rgba(13, 23, 38, 0.06);
+  background: rgba(255, 255, 255, 0.97);
+}
+
+.nav-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.brand-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--blue);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 15.5px;
+  letter-spacing: -0.2px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.nav-links a {
+  position: relative;
+  padding: 7px 13px;
+  border-radius: 8px;
+  font-size: 14.5px;
+  color: var(--muted);
+  transition: color 0.25s var(--ease), background 0.25s var(--ease);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  left: 13px;
+  right: 13px;
+  bottom: 2px;
+  height: 1.5px;
+  background: var(--blue);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.32s var(--ease);
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+  background: var(--bg-2);
+}
+
+.nav-links a:hover::after {
+  transform: scaleX(1);
+}
+
+.nav-cta {
+  margin-left: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--blue);
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.nav-cta:hover {
+  background: var(--blue-2);
+}
+
+.burger {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.3s var(--ease);
+}
+
+.burger:hover {
+  border-color: var(--blue-line);
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.burger:active {
+  transform: scale(0.94);
+}
+
+.burger.x {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.scroll-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--blue);
+  z-index: 90;
+  transition: width 0.1s linear;
+}
+
+.hero {
+  padding: 96px 0 72px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero h1 {
+  font-size: clamp(34px, 6.4vw, 56px);
+  line-height: 1.14;
+  font-weight: 700;
+  letter-spacing: -1.6px;
+  margin-bottom: 18px;
+}
+
+.hero h1 span {
+  color: var(--blue);
+}
+
+.hero p {
+  font-size: 17px;
+  color: var(--muted);
+  max-width: 500px;
+  margin-bottom: 32px;
+}
+
+.hero-act {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--line-2);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.28s var(--ease), background 0.28s var(--ease), border-color 0.28s var(--ease), color 0.28s var(--ease);
+  font-family: inherit;
+}
+
+.btn:hover {
+  border-color: var(--blue-line);
+  background: var(--blue-soft);
+  color: var(--blue);
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: 0.1s;
+}
+
+.btn-primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--blue-2);
+  border-color: var(--blue-2);
+  color: #fff;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.hero-stats div {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.hero-stats b {
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.hero-stats span {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+section {
+  padding: 68px 0;
+}
+
+.sec-head {
+  margin-bottom: 34px;
+}
+
+.sec-head h2 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  margin-bottom: 8px;
+}
+
+.sec-head p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: 18px;
+}
+
+.work {
+  padding: 26px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  display: block;
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+a.work:hover {
+  border-color: var(--blue-line);
+  background: var(--blue-soft);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(13, 23, 38, 0.07);
+}
+
+.work-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: var(--blue);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  transition: transform 0.45s var(--ease);
+}
+
+a.work:hover .work-icon {
+  transform: scale(1.08);
+}
+
+.work h3 {
+  font-size: 17px;
+  font-weight: 650;
+  margin-bottom: 8px;
+  letter-spacing: -0.2px;
+}
+
+.work p {
+  font-size: 14px;
+  color: var(--muted);
+  min-height: 66px;
+  margin-bottom: 16px;
+}
+
+.work-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--bg-2);
+  color: var(--muted);
+}
+
+.tag.live {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.tag.soon {
+  background: #fff4e5;
+  color: #b45309;
+}
+
+.work-go {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13.5px;
+  color: var(--blue);
+  font-weight: 600;
+  transition: gap 0.35s var(--ease);
+}
+
+a.work:hover .work-go {
+  gap: 10px;
+}
+
+.work-go svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.35s var(--ease);
+}
+
+a.work:hover .work-go svg {
+  transform: translateX(2px);
+}
+
+.work-soon {
+  font-size: 13.5px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(248px, 1fr));
+  gap: 18px;
+}
+
+.member {
+  padding: 30px 22px 26px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), background 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.member:hover {
+  border-color: var(--blue-line);
+  background: var(--blue-soft);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(13, 23, 38, 0.07);
+}
+
+.avatar {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  background: var(--blue);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+  transition: transform 0.45s var(--ease);
+}
+
+.member:hover .avatar {
+  transform: scale(1.07);
+}
+
+.member h3 {
+  font-size: 16.5px;
+  font-weight: 650;
+  margin-bottom: 5px;
+}
+
+.member .role {
+  display: inline-block;
+  font-style: normal;
+  font-size: 12.5px;
+  padding: 3px 11px;
+  border-radius: 6px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.member p {
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.contact-list {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.contact-list div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.contact-list b {
+  font-weight: 600;
+  color: var(--ink-2);
+  min-width: 46px;
+  text-align: right;
+}
+
+.heart {
+  position: fixed;
+  pointer-events: none;
+  font-size: 18px;
+  z-index: 999;
+  animation: fly 1.25s cubic-bezier(0.22, 0.75, 0.3, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes fly {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+  }
+
+  14% {
+    opacity: 1;
+    transform: translate(0, -18px) scale(1.08);
+  }
+
+  60% {
+    opacity: 0.9;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), -170px) scale(0.55);
+  }
+}
+
+.about-box {
+  max-width: 720px;
+}
+
+.about-box p {
+  color: var(--muted);
+  font-size: 15.5px;
+  margin-bottom: 14px;
+}
+
+.about-box ul {
+  list-style: none;
+  margin-top: 6px;
+}
+
+.about-box li {
+  padding: 9px 0 9px 22px;
+  position: relative;
+  color: var(--muted);
+  font-size: 14.5px;
+}
+
+.about-box li::before {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 18px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.cta {
+  padding: 46px 0 54px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  border-top: 1px solid var(--line);
+}
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 24px 0;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.foot-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.foot-links a {
+  transition: color 0.25s var(--ease);
+}
+
+.foot-links a:hover {
+  color: var(--blue);
+}
+
+.top-btn {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink-2);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0.35s, background 0.25s var(--ease), color 0.25s var(--ease), border-color 0.25s var(--ease);
+  box-shadow: 0 6px 20px rgba(13, 23, 38, 0.1);
+  z-index: 80;
+}
+
+.top-btn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.top-btn:hover {
+  background: var(--blue);
+  color: #fff;
+  border-color: var(--blue);
+  transform: translateY(-2px);
+}
+
+.top-btn:active {
+  transform: scale(0.94);
+}
+
+.top-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
+  will-change: opacity, transform;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c3cddc;
+  border-radius: 5px;
+  border: 2px solid var(--bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--blue);
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
+
+@media (max-width: 820px) {
+  .nav-links {
+    position: fixed;
+    inset: 64px 0 auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 0 20px;
+    background: var(--surface);
+    border-bottom: 1px solid transparent;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.42s var(--ease), opacity 0.3s var(--ease), padding 0.42s var(--ease), border-color 0.3s;
+  }
+
+  .nav-links.show {
+    max-height: 380px;
+    opacity: 1;
+    padding: 14px 20px 22px;
+    border-bottom-color: var(--line);
+  }
+
+  .nav-links a {
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease), background 0.25s var(--ease), color 0.25s var(--ease);
+  }
+
+  .nav-links.show a {
+    opacity: 1;
+    transform: none;
+  }
+
+  .nav-links.show a:nth-child(1) {
+    transition-delay: 0.06s;
+  }
+
+  .nav-links.show a:nth-child(2) {
+    transition-delay: 0.11s;
+  }
+
+  .nav-links.show a:nth-child(3) {
+    transition-delay: 0.16s;
+  }
+
+  .nav-links.show a:nth-child(4) {
+    transition-delay: 0.21s;
+  }
+
+  .nav-links a::after {
+    display: none;
+  }
+
+  .nav-cta {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .burger {
+    display: grid;
+    place-items: center;
+  }
+
+  .hero {
+    padding: 58px 0 46px;
+  }
+
+  .hero-stats {
+    gap: 22px;
+    margin-top: 34px;
+  }
+
+  section {
+    padding: 48px 0;
+  }
+
+  .top-btn {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+</style>
 </head>
 <body>
 
-<header class="nav">
+<div class="scroll-bar" id="sbar"></div>
+
+<header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a class="brand" href="index.html">
+    <a class="brand" href="#top">
       <div class="brand-mark">RF</div>
-      <div class="brand-name"><span data-site-name>RFGames</span> Web</div>
+      <div class="brand-name">RFGames Web</div>
     </a>
-    <nav class="nav-links">
-      <a href="index.html" data-page="index.html">首页</a>
-      <a href="works.html" data-page="works.html">作品</a>
-      <a href="team.html" data-page="team.html">团队</a>
-      <a href="about.html" data-page="about.html">关于</a>
-      <a class="nav-cta" href="works.html">浏览作品</a>
+    <nav class="nav-links" id="links">
+      <a href="#works">Games</a>
+      <a href="#team">Team</a>
+      <a href="#about">About</a>
+      <a class="nav-cta" href="#works">Browse Games</a>
     </nav>
-    <button class="burger" aria-label="菜单">☰</button>
+    <button class="burger" id="burger" aria-label="Menu">☰</button>
   </div>
 </header>
 
-<div class="wrap">
+<div class="wrap" id="top">
+
   <section class="hero">
-    <h1><span data-hero-title>RFGames</span> Web</h1>
-    <p data-hero-sub>用游戏记录想象</p>
+    <h1><span>RFGames</span> Web</h1>
+    <p>An indie game studio building worlds worth getting lost in.</p>
     <div class="hero-act">
-      <a class="btn btn-primary" href="works.html">浏览全部作品</a>
-      <a class="btn" href="team.html">团队成员</a>
+      <a class="btn btn-primary" href="#works">Browse Games</a>
+      <a class="btn" href="#team">Meet the Team</a>
     </div>
     <div class="hero-stats">
-      <div><b data-stat="works">0</b><span>个作品</span></div>
-      <div><b data-stat="team">0</b><span>位成员</span></div>
+      <div><b data-stat="works">0</b><span>Games</span></div>
+      <div><b data-stat="team">0</b><span>Members</span></div>
     </div>
   </section>
 
   <section id="works">
     <div class="sec-head">
-      <h2>作品</h2>
-      <p>点击卡片跳转至对应作品</p>
+      <h2>Games</h2>
+      <p>Click a card to open the game</p>
     </div>
-    <div class="work-grid" id="home-works"></div>
-    <div class="more">
-      <a class="btn" href="works.html">查看全部作品</a>
-    </div>
+    <div class="work-grid" id="workGrid"></div>
   </section>
 
   <section id="team">
     <div class="sec-head">
-      <h2>团队成员</h2>
-      <p>点击成员卡片会掉落一颗爱心</p>
+      <h2>Team</h2>
+      <p>Click a member to drop a heart</p>
     </div>
-    <div class="team-grid" id="home-team"></div>
+    <div class="team-grid" id="teamGrid"></div>
+  </section>
+
+  <section id="about">
+    <div class="sec-head">
+      <h2>About</h2>
+    </div>
+    <div class="about-box">
+      <p>RFGames Web is a one-man indie studio. Everything here is built, coded and art-directed from scratch.</p>
+      <ul>
+        <li>Game development, art and music under one roof</li>
+        <li>Strategy and simulation with a strong visual identity</li>
+        <li>Every project iterated until it feels right</li>
+      </ul>
+    </div>
   </section>
 
   <section class="cta">
-    <a class="btn btn-primary" href="about.html">了解我们</a>
+    <a class="btn btn-primary" href="#works">Browse Games</a>
   </section>
 </div>
 
 <footer>
   <div class="wrap foot">
-    <span data-footer>© 2026 RFGames Web</span>
-    <div class="foot-links" data-icp></div>
+    <span>© 2026 RFGames Web</span>
+    <div class="foot-links">
+      <a href="https://yudxx.itch.io/galactic" target="_blank" rel="noopener">itch.io</a>
+    </div>
   </div>
 </footer>
 
-<script src="assets/js/store.js"></script>
-<script src="assets/js/main.js"></script>
+<button class="top-btn" id="topBtn" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const works = Store.works();
-  const team = Store.team();
+const GAMES = [
+  {
+    title: 'Galactic Colonist',
+    desc: 'THE HOMEWORLD IS GONE. TWELVE SURVIVORS REMAIN ABOARD ARK-01. CLAIM WORLDS, RAISE COLONIES AND COMMAND THE VOID.',
+    link: 'https://yudxx.itch.io/galactic',
+    tag: 'Released',
+    tagClass: 'live'
+  },
+  {
+    title: 'Another Summer',
+    desc: 'Currently in testing. A visual novel about the long, quiet days that shape us.',
+    link: '',
+    tag: 'Beta',
+    tagClass: 'soon'
+  }
+];
 
-  const setStat = (key, val) => {
-    const n = document.querySelector('[data-stat="' + key + '"]');
-    if (n) n.textContent = val;
+const TEAM = [
+  {
+    name: 'RenFeng',
+    role: 'Team Lead',
+    desc: 'Technical, art and music — everything is handled in house.',
+    contacts: [
+      { label: 'QQ', value: '2047752264' },
+      { label: 'WeChat', value: 'dll764' }
+    ]
+  }
+];
+
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+}[c]));
+
+const initials = t => String(t || '').trim().slice(0, 2);
+
+function renderGames() {
+  document.getElementById('workGrid').innerHTML = GAMES.map(g => {
+    const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+    const foot = g.link
+      ? '<span class="work-go">Play now' + arrow + '</span>'
+      : '<span class="work-soon">Link coming soon</span>';
+    const inner =
+      '<div class="work-icon">' + esc(initials(g.title)) + '</div>' +
+      '<h3>' + esc(g.title) + '</h3>' +
+      '<p>' + esc(g.desc) + '</p>' +
+      '<div class="work-foot"><span class="tag ' + g.tagClass + '">' + esc(g.tag) + '</span>' + foot + '</div>';
+    return g.link
+      ? '<a class="work reveal" href="' + esc(g.link) + '" target="_blank" rel="noopener">' + inner + '</a>'
+      : '<div class="work reveal">' + inner + '</div>';
+  }).join('');
+}
+
+function renderTeam() {
+  document.getElementById('teamGrid').innerHTML = TEAM.map(m => {
+    const rows = m.contacts.map(c => (
+      '<div><b>' + esc(c.label) + '</b><span>' + esc(c.value) + '</span></div>'
+    )).join('');
+    return (
+      '<div class="member reveal" data-heart>' +
+      '<div class="avatar">' + esc(initials(m.name)) + '</div>' +
+      '<h3>' + esc(m.name) + '</h3>' +
+      '<em class="role">' + esc(m.role) + '</em>' +
+      '<p>' + esc(m.desc) + '</p>' +
+      '<div class="contact-list">' + rows + '</div>' +
+      '</div>'
+    );
+  }).join('');
+}
+
+function hearts(el) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width / 2;
+  const cy = r.top + r.height / 2;
+  const glyphs = ['♥', '❤'];
+  for (let i = 0; i < 9; i++) {
+    const s = document.createElement('span');
+    s.className = 'heart';
+    s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+    s.style.left = cx + (Math.random() - 0.5) * r.width * 0.7 + 'px';
+    s.style.top = cy + (Math.random() - 0.5) * 34 + 'px';
+    s.style.setProperty('--dx', (Math.random() - 0.5) * 150 + 'px');
+    s.style.fontSize = 15 + Math.random() * 14 + 'px';
+    s.style.animationDelay = Math.random() * 0.14 + 's';
+    s.style.color = ['#f472b6', '#fb7185', '#ec4899'][Math.floor(Math.random() * 3)];
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 1500);
+  }
+}
+
+function reveal() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.reveal:not(.in)').forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -32px' });
+  document.querySelectorAll('.reveal:not(.in)').forEach((el, i) => {
+    el.style.transitionDelay = Math.min(i * 60, 360) + 'ms';
+    io.observe(el);
+  });
+}
+
+function countUp() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      io.unobserve(el);
+      const end = parseInt(el.textContent, 10) || 0;
+      if (end <= 0) return;
+      const dur = 900;
+      const t0 = performance.now();
+      const step = now => {
+        const p = Math.min((now - t0) / dur, 1);
+        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }, { threshold: 0.4 });
+  document.querySelectorAll('[data-stat]').forEach(n => io.observe(n));
+}
+
+function scrollFx() {
+  const nav = document.getElementById('nav');
+  const bar = document.getElementById('sbar');
+  const top = document.getElementById('topBtn');
+  const run = () => {
+    const y = window.scrollY;
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(Math.max(y, 0) / h, 1) * 100 : 0).toFixed(2) + '%';
+    nav.classList.toggle('stuck', y > 8);
+    top.classList.toggle('show', y > 420);
   };
-  setStat('works', works.length);
-  setStat('team', team.length);
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      run();
+      ticking = false;
+    });
+  }, { passive: true });
+  window.addEventListener('resize', run, { passive: true });
+  top.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  run();
+}
 
-  RF.renderWorks('home-works', works, 6);
-  RF.renderTeam('home-team');
-  RF.countUp();
-});
+function init() {
+  document.querySelector('[data-stat="works"]').textContent = GAMES.length;
+  document.querySelector('[data-stat="team"]').textContent = TEAM.length;
+
+  renderGames();
+  renderTeam();
+
+  document.querySelectorAll('[data-heart]').forEach(el => {
+    el.addEventListener('click', () => hearts(el));
+  });
+
+  const burger = document.getElementById('burger');
+  const links = document.getElementById('links');
+  burger.addEventListener('click', () => {
+    const open = links.classList.toggle('show');
+    burger.classList.toggle('x', open);
+    burger.textContent = open ? '✕' : '☰';
+  });
+  links.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      links.classList.remove('show');
+      burger.classList.remove('x');
+      burger.textContent = '☰';
+    });
+  });
+
+  scrollFx();
+  reveal();
+  countUp();
+}
+
+document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
