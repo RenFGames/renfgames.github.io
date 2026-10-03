@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品 · RFGames Web</title>
+<link rel="icon" href="assets/img/rf.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">RF</div>
+      <div class="brand-name"><span data-site-name>RFGames</span> Web</div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html" data-page="index.html">首页</a>
+      <a href="works.html" data-page="works.html">作品</a>
+      <a href="team.html" data-page="team.html">团队</a>
+      <a href="about.html" data-page="about.html">关于</a>
+      <a class="nav-cta" href="works.html">浏览作品</a>
+    </nav>
+    <button class="burger" aria-label="菜单">☰</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="page-head">
+    <h1>作品</h1>
+    <p>共 <b id="count">0</b> 个作品</p>
+  </div>
+  <section style="padding-top:0">
+    <div class="work-grid" id="list"></div>
+  </section>
+  <section class="cta">
+    <a class="btn btn-primary" href="about.html">了解我们</a>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap foot">
+    <span data-footer>© 2026 RFGames Web</span>
+    <div class="foot-links" data-icp></div>
+  </div>
+</footer>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const works = Store.works();
+  document.getElementById('count').textContent = works.length;
+  RF.renderWorks('list', works);
+});
+</script>
+</body>
+</html>
